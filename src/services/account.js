@@ -14,7 +14,7 @@ const getAllAccount = async ({ limit, offset }) => {
     const { total } = await db.queryOne(countsql)
     return {
         data,
-        meta: {
+        metadata: {
             length: data.length,
             total
         }
@@ -26,7 +26,9 @@ const getAccountbyId = async (id) => {
     from account
     where isDelete = 0 and username = ?`
     const data = await db.queryOne(sql, [id])
-
+    return {
+        data
+    }
 }
 const creatAccount = async (newAccount) => {
     const checkExistedSQL = `
