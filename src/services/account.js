@@ -1,5 +1,6 @@
 const db = require('../utils/db')
 const security = require('../utils/security')
+const tinyUrl = require('tinyurl')
 const getAllAccount = async ({ limit, offset }) => {
     const sql = `
     select username, password, role, display, email, phone, address, birthday, avatar, status , created_at, updated_at
@@ -20,12 +21,12 @@ const getAllAccount = async ({ limit, offset }) => {
         }
     }
 }
-const getAccountbyId = async (id) => {
+const getAccountbyId = async (username) => {
     const sql = `
     select username, password, role, display, email, phone, address, birthday, avatar, status, created_at, updated_at 
     from account
     where isDelete = 0 and username = ?`
-    const data = await db.queryOne(sql, [id])
+    const data = await db.queryOne(sql, [username])
     return {
         data
     }
@@ -41,8 +42,9 @@ const creatAccount = async (newAccount) => {
         const sql = `
     insert into account (username, password, role, display, email, phone, address, birthday, avatar, status )
     values(?,?,?,?,?,?,?,?,?,?)`
+        const tinyAvatar = await tinyUrl.shorten(newAccount.avatar)
         const encryptedPassword = await security.generatePassword(newAccount.password)
-        await db.query(sql, [newAccount.username, encryptedPassword, newAccount.role, newAccount.display, newAccount.email, newAccount.phone, newAccount.address, newAccount.birthday, newAccount.avatar, newAccount.status])
+        await db.query(sql, [newAccount.username, encryptedPassword, newAccount.role, newAccount.display, newAccount.email, newAccount.phone, newAccount.address, newAccount.birthday, tinyAvatar, newAccount.status])
         return "tao tai khoan thanh cong";
     }
 }

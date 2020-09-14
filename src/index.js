@@ -52,9 +52,9 @@ app.get('/api/v1/test-err2', (req, res, next) => {
   throw Error('Có lỗi 2')
 })
 
-// 3. error handle middleware
-const {errorHandle} = require('./middlewares/errorHandle')
-app.use(errorHandle); // dam bao server khong bi chet vi loi gi do
+// // 3. error handle middleware
+// const {errorHandle} = require('./middlewares/errorHandle')
+// app.use(errorHandle); // dam bao server khong bi chet vi loi gi do
 
 // 4. listen
 const PORT = process.env.API_PORT;

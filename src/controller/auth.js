@@ -1,4 +1,5 @@
 const authService = require('../services/auth')
+const accountService = require('../services/account')
 const login = async (req, res, next) => {
     const user = {
         username: req.body.username,
@@ -14,11 +15,18 @@ const login = async (req, res, next) => {
         })
     } else {
         res.send({
-            status:0,
-            message:'dang nhap that bai'
+            status: 0,
+            message: 'dang nhap that bai'
         })
     }
 }
-module.exports={
-    login
+const getMe = async (req, res, next) => {
+    console.log("Me");
+    const user = await accountService.getAccountbyId(req.username)
+    console.log(user);
+    res.send(user)
+}
+module.exports = {
+    login,
+    getMe
 }
