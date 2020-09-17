@@ -19,7 +19,11 @@ Route.post('/', async (req, res, next) => {
         // 123456 => hash => encrypt => result => save to db
     }
     const result = await accountController.creatAccount(newAccount)
-    res.send(result)
+    if (result.status) {
+        res.send(result)
+    } else {
+        console.log('tao tai khoan that bai');
+    }
 })
 Route.put('/:id', accountController.updateAccount)
 Route.delete('/:id', accountController.deleteAccount)
