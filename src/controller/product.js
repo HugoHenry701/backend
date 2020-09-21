@@ -10,7 +10,7 @@ const getAllproduct = async (req, res) => {
 }
 const getProductbyId = async (req, res) => {
     const { id } = req.params;
-    const { data } = await productService.getProductbyId(id)
+    const { data } = await productService.getProductbyID(id)
     res.send({
         status: 1,
         data
@@ -33,9 +33,18 @@ const deleteProduct = async (req, res) => {
     const { id } = req.params
     await productService.deleteProductbyID(id)
     res.send({
-        status:1,
+        status: 1,
     })
 
+}
+const getProductbyCategoryID = async (req, res) => {
+    const { categoryId } = req.params;
+    const { data, metadata } = await productService.getProductbyCategorybyID(categoryId,req.pagination)
+    res.send({
+        status: 1,
+        metadata,
+        data
+    })
 }
 module.exports = {
     getAllproduct,
@@ -43,4 +52,5 @@ module.exports = {
     createProduct,
     updateProduct,
     deleteProduct,
+    getProductbyCategoryID
 }

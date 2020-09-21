@@ -29,6 +29,27 @@ const getProductbyID = async (id) => {
         data
     }
 }
+const getProductbyCategorybyID = async (categoryId,{limit,offset}) => {
+    const sql = `
+    select productId,display,provider,description, imageUrl, priceIn, priceOut, priceSale, shipday, instock, status,created_at, updated_at from product
+    where isDelete=0 and categoryId=?
+    limit ?
+    offset ?;
+    `
+    const data = await db.queryMulti(sql, [categoryId,limit,offset])
+    const countsql = `
+    select count(productId) as total from product
+    where isDelete=0 and categoryId=?
+    `
+    const { total } = await db.queryOne(countsql,[categoryId])
+    return {
+        data,
+        metadata: {
+            length: data.length,
+            total
+        }
+    }
+}
 const creatProduct = async ({ display, provider, description, imageUrl, priceIn, priceOut, priceSale, shipday, instock, status, categoryId }) => {
     const sql = `
     insert into product (productId,display,provider,description, imageUrl, priceIn, priceOut, priceSale, shipday, instock, status,categoryId)
@@ -78,5 +99,6 @@ module.exports = {
     creatProduct,
     updateProductbyID,
     deleteProductbyID,
+    getProductbyCategorybyID,
     parameterProduct
 }

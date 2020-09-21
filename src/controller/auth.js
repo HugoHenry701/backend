@@ -1,5 +1,7 @@
 const authService = require('../services/auth')
 const accountService = require('../services/account')
+const security = require('../utils/security')
+
 const login = async (req, res, next) => {
     const user = {
         username: req.body.username,
@@ -7,16 +9,27 @@ const login = async (req, res, next) => {
     }
 
     const result = await authService.login(user);
-    // const result = 've xem phim'
     if (result) {
-        res.send({
-            status: 1,
-            token: result
-        })
+        const compare = await security.verifyPassword(user.password, result.password)
+        if (compare) {
+            res.send({
+                status: 1,
+                token: security.generateToken({
+                    username: result.username,
+                    role: result.role,
+                })
+            })
+            next()
+        } else {
+            res.send({
+                status: 0,
+                message: 'Wrong password'
+            })
+        }
     } else {
         res.send({
             status: 0,
-            message: 'dang nhap that bai'
+            message: 'User not found'
         })
     }
 }

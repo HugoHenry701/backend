@@ -1,7 +1,7 @@
 const db = require('../utils/db')
 const getAllOrder = async ({ limit, offset }) => {
     const sql = `
-select orderId,username,productId,price,amount,note,status,created_at,updated_at
+select orderId,username,productId,price,amount,note,\`status\`,created_at
 from \`order\`
 where isDelete = 0
 limit ?
@@ -9,7 +9,8 @@ offset ?
 `
     const data = await db.queryMulti(sql, [limit, offset])
     const countsql = `
-    select count(orderId) as total from order`
+    select count(orderId) as total from \`order\`
+    `
     const { total } = await db.queryOne(countsql)
     return {
         data,
@@ -21,7 +22,7 @@ offset ?
 }
 const getOrderbyId = async (id) => {
     const sql = `
-    select orderId,username,productId,price,amount,note,status,created_at,updated_at
+    select orderId,username,productId,price,amount,note,\`status\`,created_at
     from \`order\`
     where isDelete = 0
     and orderId = ?`
